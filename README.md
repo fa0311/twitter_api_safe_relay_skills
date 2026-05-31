@@ -15,6 +15,10 @@ Config values are kept out of `SKILL.md` via environment variables — see `.env
 
 - **[twitter-api-replay](skills/twitter-api-replay/SKILL.md)** — translate instructions into Twitter relay-server GraphQL / v1.1 calls and return a summarized result.
 
+**Requires a running relay server** — [fa0311/twitter_api_safe_relay](https://github.com/fa0311/twitter_api_safe_relay). Stand it up first, then point `TWITTER_REPLAY_BASE_URL` at it.
+
+The relay holds the auth, so **the AI never sees your credentials or solves a captcha** — it only knows the operation catalog. That lets you hand Twitter API access to an AI securely, and with low token usage (the AI just picks an operation and edits a few variables instead of reasoning over the raw API).
+
 ### Updating `requests.ndjson`
 
 The operation catalog is captured from real traffic, not written by hand:
