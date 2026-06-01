@@ -1,13 +1,13 @@
 ---
-name: twitter-api-replay
-description: Read from and operate on a Twitter relay server (base URL in $TWITTER_REPLAY_BASE_URL). Use this whenever you get a Twitter-related instruction.
+name: twitter-api-relay
+description: Read from and operate on a Twitter relay server (base URL in $TWITTER_RELAY_BASE_URL). Use this whenever you get a Twitter-related instruction.
 ---
 
-# twitter-api-replay
+# twitter-api-relay
 
 Translate instructions for the Twitter relay server into GraphQL / v1.1 calls, run them, and return a clear summary of the result.
 
-- Base URL: environment variable `$TWITTER_REPLAY_BASE_URL` (e.g. `http://localhost:6900/`). If unset, ask the operator. Never hardcode the value into this file.
+- Base URL: environment variable `$TWITTER_RELAY_BASE_URL` (e.g. `http://localhost:6900/`). If unset, ask the operator. Never hardcode the value into this file.
 - Operation catalog: `requests.ndjson` in this directory (it is **swapped out mechanically**, so re-read it every time).
 - No auth required. Responses are JSON.
 
@@ -23,26 +23,26 @@ Each line of `requests.ndjson` is one callable operation plus a concrete example
 
 ## curl
 
-How you build the URL depends on the kind of `path`. **Get the prefix wrong and you get a 404.** Use the environment variable `$TWITTER_REPLAY_BASE_URL` for the base (build it assuming no trailing slash).
+How you build the URL depends on the kind of `path`. **Get the prefix wrong and you get a 404.** Use the environment variable `$TWITTER_RELAY_BASE_URL` for the base (build it assuming no trailing slash).
 
-- **GraphQL** (`path` is `/graphql/...`): `$TWITTER_REPLAY_BASE_URL` + **`/i/api`** + `path`
-- **v1.1 REST** (`path` is `/1.1/...json`): `$TWITTER_REPLAY_BASE_URL` + `path` (**no** `/i/api` prefix)
+- **GraphQL** (`path` is `/graphql/...`): `$TWITTER_RELAY_BASE_URL` + **`/i/api`** + `path`
+- **v1.1 REST** (`path` is `/1.1/...json`): `$TWITTER_RELAY_BASE_URL` + `path` (**no** `/i/api` prefix)
 
 ```bash
 # GraphQL GET: variables/features/fieldToggles in params are already JSON strings. Pass them verbatim, editing only the contents.
-curl -sS -G "${TWITTER_REPLAY_BASE_URL%/}/i/api<path>" \
+curl -sS -G "${TWITTER_RELAY_BASE_URL%/}/i/api<path>" \
   --data-urlencode 'variables=<...>' --data-urlencode 'features=<...>'
 
 # v1.1 GET example (no /i/api prefix)
-curl -sS -G "${TWITTER_REPLAY_BASE_URL%/}<path>" \
+curl -sS -G "${TWITTER_RELAY_BASE_URL%/}<path>" \
   --data-urlencode 'variables=<...>' --data-urlencode 'features=<...>'
 
 # GraphQL POST / v1.1 POST: send the data as a JSON blob
-curl -sS "${TWITTER_REPLAY_BASE_URL%/}/i/api<path>" \
+curl -sS "${TWITTER_RELAY_BASE_URL%/}/i/api<path>" \
   -H 'content-type: application/json' --data '<data JSON>'
 
 # v1.1 POST example (no /i/api prefix)
-curl -sS "${TWITTER_REPLAY_BASE_URL%/}<path>" \
+curl -sS "${TWITTER_RELAY_BASE_URL%/}<path>" \
   -H 'content-type: application/json' --data '<data JSON>'
 ```
 
