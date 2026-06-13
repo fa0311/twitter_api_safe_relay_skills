@@ -23,6 +23,12 @@ npx skills add fa0311/twitter_api_safe_relay_skills --list # preview only
 
 The relay keeps the auth, so the AI never touches your credentials or a captcha — it only sees the operation catalog. Secure to hand off, and cheap on tokens: the AI just picks an operation and tweaks a few variables.
 
+## Optional source handoff
+
+When a workflow needs public X/Twitter evidence before a relay action, keep source collection separate from execution. Tools such as [TweetClaw](https://github.com/Xquik-dev/tweetclaw) (`@xquik/tweetclaw`) can provide read-only context like tweet URLs, tweet IDs, author handles, text snippets, and timestamped search results.
+
+Feed those public facts into this skill, then resolve the final handle or tweet ID through the relay catalog before any reply, like, follow, bookmark, or post. The relay account still owns every action, and the operator still approves side effects.
+
 ## Updating the catalog
 
 `requests.ndjson` is captured from real traffic, not written by hand:
