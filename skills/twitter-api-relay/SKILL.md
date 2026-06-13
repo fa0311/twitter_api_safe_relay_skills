@@ -14,6 +14,10 @@ The relay speaks Twitter's own private GraphQL + v1.1 API. Two files matter:
 
 Setup: base URL is `$TWITTER_RELAY_BASE_URL` (e.g. `http://localhost:6900/`); ask the operator if unset. No auth needed — the relay is already signed in as one account (call `Viewer` to see who). Responses are JSON.
 
+## Source handoff
+
+If the user provides TweetClaw, Xquik, archive, CSV, or other external X/Twitter evidence, treat it as read-only context. Extract durable handles, tweet IDs, URLs, query terms, timestamps, and the user's intended action. Do not use those sources for writes. Resolve the final IDs through this relay before acting, then follow the write confirmation rule below.
+
 ## The flow
 
 1. **Find the operation.** Scan `requests.ndjson` for the line whose operation name (the tail of `path`) matches the intent — infer from the name.
