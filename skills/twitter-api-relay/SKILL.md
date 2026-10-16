@@ -18,6 +18,7 @@ Setup: base URL is `$TWITTER_RELAY_BASE_URL` (e.g. `http://localhost:6900/`); as
 
 1. **Find the operation.** Fetch `requests.ndjson` from the relay and scan it for the line whose operation name (the tail of `path`) matches the intent — infer from the name.
 2. **Copy that line, change only what the intent requires** (`screen_name` / `rawQuery` / `count` / `cursor` …). Leave `features`, `fieldToggles`, `queryId` exactly as shipped — they are version locks, not knobs.
+   `recordedAt` on a line is when it was recorded; it is not part of the request, drop it. A line without it is older than the rest.
 3. **Use that line's own variable keys — never guess from another operation.** A tweet is `focalTweetId` in `TweetDetail`, `tweetId` in `Retweeters`, `timelineId` in `GenericTimelineById`. Same concept, different keys.
 4. **Resolve IDs first.** Most ops want an internal id, not an @handle. Map handle → id with `UserByScreenName` (`.data.user.result.rest_id`), then make the real call. `typeahead.json` (set `q=<handle>`, `result_type=users`) is a faster fuzzy resolver — it returns `id_str` directly.
 5. **Summarize the answer** and paginate with `cursor` if more is needed.
