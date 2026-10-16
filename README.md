@@ -23,10 +23,6 @@ npx skills add fa0311/twitter_api_safe_relay_skills --list # preview only
 
 The relay keeps the auth, so the AI never touches your credentials or a captcha — it only sees the operation catalog. Secure to hand off, and cheap on tokens: the AI just picks an operation and tweaks a few variables.
 
-## Updating the catalog
+## The catalog
 
-`requests.ndjson` is captured from real traffic, not written by hand:
-
-1. Run the dashboard from [fa0311/twitter_api_safe_relay](https://github.com/fa0311/twitter_api_safe_relay).
-2. Use Twitter as usual — requests appear in the dashboard.
-3. Click **dump** and paste the output into [`skills/twitter-api-relay/requests.ndjson`](skills/twitter-api-relay/requests.ndjson).
+The operation catalog (`requests.ndjson`) is no longer stored here: the relay serves it at `GET $TWITTER_RELAY_BASE_URL/requests.ndjson`, and the skill fetches it from there. It lives in [fa0311/twitter_api_safe_relay](https://github.com/fa0311/twitter_api_safe_relay) (`packages/server/requests.ndjson`) and is recorded with `twitter-api-safe-dump`, not written by hand.
