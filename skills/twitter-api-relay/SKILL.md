@@ -10,13 +10,13 @@ Turn a Twitter instruction into the right relay call, run it, and report the ans
 The relay speaks Twitter's own private GraphQL + v1.1 API. Two files matter:
 
 - **This file** — *how* to call, and the non-obvious knowledge the catalog can't tell you.
-- **`requests.ndjson`** (same dir) — *what* you can call: one operation per line, each with a real example. It is **swapped out mechanically, so re-read it every time** — never copy its values into this file.
+- **`requests.ndjson`**, served by the relay at `$TWITTER_RELAY_BASE_URL/requests.ndjson` — *what* you can call: one operation per line, each with a real example. Fetch it at the start of every task (`curl -sS "${TWITTER_RELAY_BASE_URL%/}/requests.ndjson"`); it is **recorded mechanically and changes with X, so never copy its values into this file**.
 
 Setup: base URL is `$TWITTER_RELAY_BASE_URL` (e.g. `http://localhost:6900/`); ask the operator if unset. No auth needed — the relay is already signed in as one account (call `Viewer` to see who). Responses are JSON.
 
 ## The flow
 
-1. **Find the operation.** Scan `requests.ndjson` for the line whose operation name (the tail of `path`) matches the intent — infer from the name.
+1. **Find the operation.** Fetch `requests.ndjson` from the relay and scan it for the line whose operation name (the tail of `path`) matches the intent — infer from the name.
 2. **Copy that line, change only what the intent requires** (`screen_name` / `rawQuery` / `count` / `cursor` …). Leave `features`, `fieldToggles`, `queryId` exactly as shipped — they are version locks, not knobs.
 3. **Use that line's own variable keys — never guess from another operation.** A tweet is `focalTweetId` in `TweetDetail`, `tweetId` in `Retweeters`, `timelineId` in `GenericTimelineById`. Same concept, different keys.
 4. **Resolve IDs first.** Most ops want an internal id, not an @handle. Map handle → id with `UserByScreenName` (`.data.user.result.rest_id`), then make the real call. `typeahead.json` (set `q=<handle>`, `result_type=users`) is a faster fuzzy resolver — it returns `id_str` directly.
