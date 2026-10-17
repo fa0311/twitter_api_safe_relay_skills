@@ -25,7 +25,7 @@ Setup: base URL is `$TWITTER_RELAY_BASE_URL` (e.g. `http://localhost:6900/`); as
 
 ## Building the URL
 
-Base is `$TWITTER_RELAY_BASE_URL` (treat as no trailing slash). Every catalog `path` goes under `/i/api`, exactly as the X web app sends it: **URL = base + `/i/api` + path**, for GraphQL and for v1.1 / v2 REST alike. A wrong prefix is a silent 404. (Relay servers released before this change, 0.3.0 and older, accept REST only without `/i/api`: base + path.)
+Base is `$TWITTER_RELAY_BASE_URL` (treat as no trailing slash). Every catalog `path` goes under `/i/api`, exactly as the X web app sends it: **URL = base + `/i/api` + path**, for GraphQL and for v1.1 / v2 REST alike. A wrong prefix is a silent 404. Requires twitter-api-safe-relay 0.4.0 or newer.
 
 | `path` looks like | URL is |
 |---|---|
