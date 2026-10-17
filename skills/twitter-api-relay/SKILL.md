@@ -25,12 +25,12 @@ Setup: base URL is `$TWITTER_RELAY_BASE_URL` (e.g. `http://localhost:6900/`); as
 
 ## Building the URL
 
-The prefix depends on the API, and **a wrong prefix is a silent 404**. Base is `$TWITTER_RELAY_BASE_URL` (treat as no trailing slash).
+Base is `$TWITTER_RELAY_BASE_URL` (treat as no trailing slash). Every catalog `path` goes under `/i/api`, exactly as the X web app sends it: **URL = base + `/i/api` + path**, for GraphQL and for v1.1 / v2 REST alike. A wrong prefix is a silent 404. Requires twitter-api-safe-relay 0.4.0 or newer.
 
-| `path` looks like | URL is | Auth example |
-|---|---|---|
-| `/graphql/…` (GraphQL) | base **+ `/i/api`** + path | `…/i/api/graphql/…/SearchTimeline` |
-| `/1.1/….json` or `/2/…` (REST) | base + path — **no `/i/api`** | `…/1.1/search/typeahead.json` |
+| `path` looks like | URL is |
+|---|---|
+| `/graphql/…` (GraphQL) | `…/i/api/graphql/…/SearchTimeline` |
+| `/1.1/….json` or `/2/…` (REST) | `…/i/api/1.1/search/typeahead.json` |
 
 ```bash
 B="${TWITTER_RELAY_BASE_URL%/}"
@@ -41,9 +41,9 @@ curl -sS -G "$B/i/api<path>" --data-urlencode 'variables=<…>' --data-urlencode
 # GraphQL POST / any write — send the whole data object as one JSON body
 curl -sS "$B/i/api<path>" -H 'content-type: application/json' --data '<data JSON>'
 
-# v1.1 / v2 REST — same shapes but NO /i/api prefix
-curl -sS -G "$B<path>" --data-urlencode 'q=<…>'
-curl -sS "$B<path>"   -H 'content-type: application/json' --data '<data JSON>'
+# v1.1 / v2 REST — same prefix, query parameters as recorded
+curl -sS -G "$B/i/api<path>" --data-urlencode 'q=<…>'
+curl -sS "$B/i/api<path>" -H 'content-type: application/json' --data '<data JSON>'
 ```
 
 ## Reading responses with jq
